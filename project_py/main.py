@@ -39,7 +39,7 @@ def test_z_estimator():
 
 if __name__ == '__main__':
     # Setup: Set parameter models (or check default values in relay_detect.py
-    while (1):
+    while 1:
         print("Given functions to compute")
         print("1. Probability of mis-detection as function of a (Fraction of energy per source)")
         print("2. z Estimator for given values at source")
