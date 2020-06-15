@@ -12,13 +12,13 @@ To present an understanding of the _MAP Detection of Misbehaving Relay in Wirele
 - six 1.15 or above
 - nose 1.3 or above
 ### Installation
+- To clone from github and install as follows:
+```
+$ git clone https://github.com/harshvs99/MisbehavingRelayDetection/
+```
 - Use the released versions of the above dependancies on PyPi, **change directory** and to to **use pip** as follows:
 ```
 $ cd DigiCommProject\venv\Include\
 $ pip install -r requirements.txt
-```
-- To 
-```
-
 ```
 
