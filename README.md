@@ -1,3 +1,6 @@
+[![GitHub issues](https://img.shields.io/github/issues/harshvs99/MisbehavingRelayDetection)](https://github.com/harshvs99/MisbehavingRelayDetection/issues)
+[![GitHub license](https://img.shields.io/github/license/harshvs99/MisbehavingRelayDetection)](https://github.com/harshvs99/MisbehavingRelayDetection/blob/master/LICENSE)
+
 # MAP Detection of Misbehaving Relay
 ## Objective
 To present an understanding of the _MAP Detection of Misbehaving Relay in Wireless Multiple Access Relay Networks_ paper from _IEEE Communications Letters, Vol. 15, No. 3_ and to graphically represent the ideas presented in the paper.
