@@ -3,6 +3,7 @@ from relay_detect import z_estimation
 import matplotlib.pyplot as plt
 
 
+def P_Graph():  # To print Graph1
     for SNR_b in [1, 10, 100, 1000]:
         x = []
         y = []
