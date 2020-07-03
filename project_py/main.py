@@ -1,5 +1,5 @@
 import math
-from relay_detect import z_estimation
+from relay_detect import z_estimation, BER_estimation
 import matplotlib.pyplot as plt
 
 
@@ -7,8 +7,8 @@ def P_Graph():  # To print Graph1
     for SNR_b in [1, 10, 100, 1000]:
         x = []
         y = []
-        for i in range(0, 100001):
-            a = i / 100000
+        for i in range(0, 1001):
+            a = i / 1000
             x.append([a])
             SNR_r = 2 * (1 - a) * SNR_b
             SNR_s = a * SNR_b
@@ -37,6 +37,34 @@ def test_z_estimator():
         print("Incorrect operation")
 
 
+def BER_Graph():  # To print Graph1
+    x = []
+    y1 = []
+    y2 = []
+    y3 = []
+    a = 2 / 3
+    for i in range(0, 161):
+        x_no = i/10
+        SNR_b = pow(10, x_no)
+        x.append([x_no])
+        P_E1 = BER_estimation(SNR_b, a, 1)
+        y1.append([P_E1])
+        P_E1 = BER_estimation(SNR_b, a, 2)
+        y2.append([P_E1])
+        P_E1 = BER_estimation(SNR_b, a, 3)
+        y3.append([P_E1])
+
+    plt.plot(x, y1, label="Conventional")
+    plt.plot(x, y2, label="Proposed")
+    plt.plot(x, y3, label="Genie-aided")
+    plt.xlabel('Received SNR per information bit (in dB)')
+    plt.ylabel('Probability of Bit Error (P_E1)')
+    plt.yscale('log')
+    plt.legend(loc="lower left")
+    plt.grid(True, which="both", ls="dotted")
+    plt.show()
+
+
 if __name__ == '__main__':
     # Setup: Set parameter models (or check default values in relay_detect.py
     while 1:
@@ -48,6 +76,8 @@ if __name__ == '__main__':
             P_Graph()
         elif choice == 2:
             test_z_estimator()
+        elif choice == 3:
+            BER_Graph()
         else:
             print("Please enter only integer values for choice")
             pass
