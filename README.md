@@ -21,10 +21,9 @@ $ git clone https://github.com/harshvs99/MisbehavingRelayDetection/
 ```
 - Use the released versions of the above dependancies on PyPi, **change directory** and to to **use pip** as follows:
 ```
-$ cd DigiCommProject\venv\Include\
 $ pip install -r requirements.txt
 ```
 
 ## Reading Report
-You can find the LaTeX file in the '<\report>' folder, and can either view the pdf or compile the LaTeX file 
+You can find the LaTeX file in the `\report` folder, and can either view the pdf or compile the LaTeX file 
 
