@@ -1,4 +1,5 @@
 # Auto detect text files and perform LF normalization
 * linguist-vendored
 *.py linguist-vendored=false
-
+*.xml linguist-vendored=false
+*.iml linguist-vendored=false
