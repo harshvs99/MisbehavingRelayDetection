@@ -25,14 +25,16 @@ def P_Graph():  # To print Graph1
 
 def test_z_estimator():
     print("Enter '+1' for binary 1 and '-1' for binary 0")
-    x1 = input("Enter source 1 output: ")
-    x2 = input("Enter source 2 output: ")
-    p = input("Enter relay output: ")
-    predict = z_estimation(-1, 1, 1)
+    x1 = int(input("Enter source 1 output: "))
+    x2 = int(input("Enter source 2 output: "))
+    p = int(input("Enter relay output: "))
+    predict = z_estimation(x1, x2, p)
     if predict >= 0:
         print("Decoded output is +1")
+        print(f"Valid code-word: ({x1}, {x2}, +1)")
     elif predict < 0:
         print("Decoded output is -1")
+        print(f"Valid code-word: ({x1}, {x2}, -1)")
     else:
         print("Incorrect operation")
 
@@ -71,6 +73,7 @@ if __name__ == '__main__':
         print("Given functions to compute")
         print("1. Probability of mis-detection as function of a (Fraction of energy per source)")
         print("2. z Estimator for given values at source")
+        print("3. Probability of bit error versus received SNR per information bit (in dB)")
         choice = int(input("Enter the choice number to view functions: "))
         if choice == 1:
             P_Graph()

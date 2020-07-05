@@ -25,3 +25,6 @@ $ cd DigiCommProject\venv\Include\
 $ pip install -r requirements.txt
 ```
 
+## Reading Report
+You can find the LaTeX file in the '<\report>' folder, and can either view the pdf or compile the LaTeX file 
+

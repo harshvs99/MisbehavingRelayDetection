@@ -51,8 +51,6 @@ def BER_estimation_calculate(h, y, SNR_b, a, no):
     SNR_r = 2 * SNR_b * (1 - a)
     SNR_s = a * SNR_b
 
-    L_r = math.exp((x/2))/(4*pow(SNR_r*(SNR_r+1),0.5))
-
     P_fa = 0.5 * (1 - (pow(SNR_r / (1 + SNR_r), 0.5) * (SNR_s / (1 + SNR_s))))
     P_md = P_fa
 
@@ -62,7 +60,6 @@ def BER_estimation_calculate(h, y, SNR_b, a, no):
     Pz1 = 1 - Pz_1
     if no == 1:
         ans = 1 / (1 + math.exp(abs(L_1 + j)))
-        print(f"SNR_b is {SNR_b}, and {ans}")
         return ans
     elif no == 2:
         ans = (((1 - P_md) * Pz_1 + (1 - P_fa) * Pz1) / (1 + math.exp(abs(L_1 + j)))) + ((P_md * Pz_1 + P_fa * Pz1) / (1 + math.exp(abs(L_1 - j))))
@@ -72,7 +69,7 @@ def BER_estimation_calculate(h, y, SNR_b, a, no):
         return ans
 
 
-def BER_estimation(SNR_b, a, no):
+def BER_estimation(SNR_b, a, no): #Print Graph for 𝛼 = 2/3, 𝑃(𝑧 = −1) = 10−2.
     x1, x2, p = -1, -1, -1
     h_r = complex(1, 0.5)
     h_1 = complex(1, 0.5)
