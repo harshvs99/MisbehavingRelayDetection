@@ -128,7 +128,7 @@ We assume the signals to be sent through orthogonal Rayleigh fading channels wit
 %\caption{Repeater Schematic}
 %\label{fig1}
 %\end{figure}
-\includegraphics[Fig 1. Repeater Schematic]{repeater-diagram.jpg}
+%\includegraphics[Fig 1. Repeater Schematic]{repeater-diagram.jpg}
 
 
 \end{itemize}
@@ -159,21 +159,26 @@ The value of Eqn. 2 will be used to determine the \textbf{estimation} of the val
 \[\hat{z}=+1, \quad if L(z|h,y)\geq 0\]
 \[\hat{z}=-1, \quad if L(z|h,y)< 0\]
 \begin{lstlisting}[label={list:first},caption=]
-def z_estimation_calculate(h,y):
-    d_i = 1 # Distance b/w source and relay
-    E_s = 1 # Transmit Energy - Source
-    d_r = 1 # Distance between relay and reviever
-    E_r = 1 # Transmit Energy - Relay
-    m = 0.5 # Path loss exponent
-    N_o = 0.25 # Variance
+# Set parameters for the model
+d_i = 1  # Distance b/w source and relay
+E_s = 1  # Normalised SNR measure - Source
+d_r = 1  # Distance between relay and reciever
+E_r = 1  # Normalised SNR measure - Relay
+m = 0.7  # Path loss exponent
+N_o = 0.25  # Variance
 
-    L_r = ((4*pow(d_r,-m)*E_r)/N_o) #To be multiplied by Re[h[0]* y[0]]
-    L_1 = ((4*pow(d_i,-m)*E_s)/N_o) #To be multiplied by Re[h[1]* y[1]]
-    L_2 = ((4*pow(d_i,-m)*E_s)/N_o) #To be multiplied by Re[h[2]* y[2]]
+def z_estimation_calculate(h, y):
+    L_r = ((4 * pow(pow(d_r, -m) * E_r, 0.5)) / N_o) * (np.conj(h[0]) * y[0]).real
+    L_1 = ((4 * pow(pow(d_i, -m) * E_s, 0.5)) / N_o) * (np.conj(h[1]) * y[1]).real
+    L_2 = ((4 * pow(pow(d_i, -m) * E_s, 0.5)) / N_o) * (np.conj(h[2]) * y[2]).real
 
-    sign = lambda a: (a>0) - (a<0)
-    sn = sign(L_r*L_1*L_2)
-    L_z = sn*min(L_r,L_1,L_2)
+    if L_r * L_1 * L_2 < 0:
+        L_z = -1 * min(abs(L_r), abs(L_1), abs(L_2))
+    elif L_r * L_1 * L_2 >= 0:
+        L_z = min(abs(L_r), abs(L_1), abs(L_2))
+    print(f"L_r: {L_r}\nL_1: {L_1}\nL_2: {L_2}")
+    print(f"LLR value of z is: {L_z}")
+    return L_z
 \end{lstlisting}
 
 \section{Decoding Schemes}
@@ -213,6 +218,12 @@ Conventional decoder does not have the side information regarding $z$. Hence, th
 \section{Numerical and Graphical Results}
 \subsection{False Alarm and Mis-detection}
 The above described system is what is described as a soft-detect system, the paper computes a theoretical probability of false alarm $P_{FA}$ and mis-detection $P_{MD}$ v/s the fraction of energy allotted to each source $\alpha=\gamma_s/\gamma_b$ (where $\gamma_s$ is SNR of each source, and $\gamma_b$ is received SNR per information bit, given by $\gamma_b=(2\gamma_s+\gamma_r)/2 $ 
+
+\begin{center}
+\includegraphics[Graph_1.png]{Graph_1.png}
+Fig 3. Probability of false alarm and mis-detection v/s fraction of energy per source
+\end{center}
+
 \begin{lstlisting}[label={list:first},caption=]
 def P_Graph():
     for SNR_b in [1,10,100,1000]:
@@ -235,10 +246,7 @@ def P_Graph():
     plt.show()
 \end{lstlisting}
 
-\begin{center}
-\includegraphics[Graph_1.png]{Graph_1.png}
-Fig 3. Probability of false alarm and mis-detection v/s fraction of energy per source
-\end{center}
+
 
 
 
@@ -252,13 +260,15 @@ P_{E,1} & = P(\hat x_1\neq x_1 | \textbf{h,y})\\
  &+ {P_{FA}P(z=+1)+P_{MD}P(z=-1)\over 1+\exp(|L_{1}-L(p\oplus x_{2}| h_{r},y_{r},h_{2},y_{2})|)}
 \end{split}
 \end{equation}
+
+
 where 
 \[
 L(p\oplus x_{2} h_{r}, y_{r}, h_{2}, y_{2}) = \ln{\exp(L_{r})+\exp(L_{2})\over 1+\exp(L_{r}+L_{2})}
 \]
 and
 \begin{equation}
-	L(p\oplus x_{2} \oplus (-1)|h_r,y_r,h_2,y_2) = -L(p\oplus x_{2}|h_r,y_r,h_2,y_2)
+    L(p\oplus x_{2} \oplus (-1)|h_r,y_r,h_2,y_2) = -L(p\oplus x_{2}|h_r,y_r,h_2,y_2)
 \end{equation}
  
 
@@ -283,16 +293,15 @@ P_{E,1} & = P(\hat x_1\neq x_1 | \textbf{h,y})\\
 \end{itemize}
 \begin{lstlisting}[label={list:first},caption=]
 def BER_estimation_calculate(h, y, SNR_b, a, no):
-    L_r = ((4 * pow(pow(d_r, -m) * E_r, 0.5)) / N_o) * (np.conj(h[0]) * y[0]).real
-    L_1 = ((4 * pow(pow(d_i, -m) * E_s, 0.5)) / N_o) * (np.conj(h[1]) * y[1]).real
-    L_2 = ((4 * pow(pow(d_i, -m) * E_s, 0.5)) / N_o) * (np.conj(h[2]) * y[2]).real
-
     SNR_r = 2 * SNR_b * (1 - a)
     SNR_s = a * SNR_b
 
+    L_r = round(((4 * pow(SNR_r, 0.5)) / pow(N_o,0.5)) * abs((np.conj(h[0]) * y[0]).real), 2)
+    L_1 = round(((4 * pow(SNR_s, 0.5)) / pow(N_o,0.5)) * abs((np.conj(h[1]) * y[1]).real), 2)
+    L_2 = round(((4 * pow(SNR_s, 0.5)) / pow(N_o,0.5)) * abs((np.conj(h[2]) * y[2]).real), 2)
+    print(L_r,L_1,L_2)
     P_fa = 0.5 * (1 - (pow(SNR_r / (1 + SNR_r), 0.5) * (SNR_s / (1 + SNR_s))))
     P_md = P_fa
-
     j = math.log((math.exp(L_r) + math.exp(L_2)) / 1 + math.exp(L_r + L_2))  # to find BER for x1
     pf, p1, p2 = 1, 1e-2, 1e-2
     Pz_1 = pf * (1 + 2*p1 + 2*p2 + 3*p1*p2) + (p1 + p2 + 2 * p1*p2)
@@ -311,7 +320,7 @@ def BER_estimation_calculate(h, y, SNR_b, a, no):
 The above BER models can then be plotted for particular values of $\alpha$ (2/3 in this case, for lowest $P_{FA}$ and $P_{MD}$ ) and can be printed using:
 
 \begin{lstlisting}[label={list:first},caption=]
-def BER_Graph():  # To print Graph2
+def BER_Graph():  # To print Graph1
     x = []
     y1 = []
     y2 = []
@@ -319,7 +328,7 @@ def BER_Graph():  # To print Graph2
     a = 2 / 3
     for i in range(0, 161):
         x_no = i/10
-        SNR_b = pow(10, x_no)
+        SNR_b = x_no #pow(10, x_no*10)
         x.append([x_no])
         P_E1 = BER_estimation(SNR_b, a, 1)
         y1.append([P_E1])
@@ -337,6 +346,7 @@ def BER_Graph():  # To print Graph2
     plt.legend(loc="lower left")
     plt.grid(True, which="both", ls="dotted")
     plt.show()
+    
 def BER_estimation(SNR_b, a, no):
     x1, x2, p = -1, -1, -1
     h_r = complex(1, 0.5)
@@ -396,3 +406,4 @@ P(\hat{x_1}\neq x_1|z=-1) & =  P(\hat{x_1} \neq x_1 | z=-1)P(z = -1)\\
 
 
 \end{document}
+

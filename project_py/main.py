@@ -47,7 +47,7 @@ def BER_Graph():  # To print Graph1
     a = 2 / 3
     for i in range(0, 161):
         x_no = i/10
-        SNR_b = x_no #pow(10, x_no*10)
+        SNR_b = pow(10, x_no)
         x.append([x_no])
         P_E1 = BER_estimation(SNR_b, a, 1)
         y1.append([P_E1])

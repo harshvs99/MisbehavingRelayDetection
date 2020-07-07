@@ -7,8 +7,8 @@ d_i = 1  # Distance b/w source and relay
 E_s = 1  # Normalised SNR measure - Source
 d_r = 1  # Distance between relay and reciever
 E_r = 1  # Normalised SNR measure - Relay
-m = 0.7  # Path loss exponent
-N_o = 0.25  # Variance
+m = 3  # Path loss exponent
+N_o = 0.5  # Variance
 
 
 def y_calculate(h, E, x):
